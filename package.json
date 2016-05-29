@@ -1,6 +1,6 @@
 {
   "name": "promise-should",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Should promise assertion library for BDD with jasmine and similar unit test frameworks.",
   "main": "lib/index.js",
   "files": [
