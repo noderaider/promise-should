@@ -1,42 +1,41 @@
-const shouldPromise = () => {
-  const isA = p => {
+import Promise from 'bluebird'
+
+const promiseShould = () => {
+  const isPromise = (p, swallowErrors = true) => {
     expect(p.then).toBeDefined()
     expect(p.catch).toBeDefined()
-    expect(p.finally).toBeDefined()
+    //expect(p.finally).toBeDefined()
+    if(swallowErrors)
+      p.catch(() => {})
   }
-  const isNotA = p => {
+  const isNotPromise = p => {
     expect(p.then).toBeUndefined()
     expect(p.catch).toBeUndefined()
-    expect(p.finally).toBeUndefined()
+    //expect(p.finally).toBeUndefined()
   }
-  const shouldResolve = done => result => {
-    console.warn('RESOLVE =>', typeof result, result)
-    expect(result).toEqual(jasmine.any(Object))
-    done()
+  const shouldResolve = p => done => {
+    p.then(result => {
+      expect(result).toBeDefined()
+      done()
+    }).catch(err => {
+      expect(err).toBeUndefined()
+      done()
+    })
   }
-  const shouldReject = done => err => {
-    console.warn('REJECT =>', typeof err, err)
-    expect(err).toEqual(jasmine.any(Object))
-    done()
+  const shouldReject = p => done => {
+    p.then(result => {
+      expect(result).toBeUndefined()
+      done()
+    }).catch(err => {
+      expect(err).toBeDefined()
+      done()
+    })
   }
-  const shouldNotResolve = done => result => {
-    console.warn('RESOLVE UNEXPECTED =>', typeof result, result)
-    expect(result).toBeUndefined()
-    done()
-  }
-  const shouldNotReject = done => err => {
-    console.warn('REJECT UNEXPECTED =>', typeof err, err)
-    expect(err).toBeUndefined()
-    done()
-  }
-  const is = { a: isA, not: { a: isNotA }}
+  const is = { a: isPromise, not: { a: isNotPromise }}
   const should =  { resolve: shouldResolve
                   , reject: shouldReject
-                  , not:  { resolve: shouldNotResolve
-                          , reject: shouldNotReject
-                          }
                   }
   return { is, should }
 }
 
-export default shouldPromise()
+export default promiseShould()

@@ -1,6 +1,10 @@
+import Promise from 'bluebird'
+
 /** @test {promise} */
 describe('promise', () => {
   const promise = require('../../lib').default
+  const createResolve = () => new Promise((resolve, reject) => resolve('resolved'))
+  const createReject = () => new Promise((resolve, reject) => reject(new Error('rejected')))
 
   it('is an object', () => expect(promise).toEqual(jasmine.any(Object)))
 
@@ -16,47 +20,46 @@ describe('promise', () => {
 
     /** @test {promise#is#not} */
     describe('not =>', () => {
-      it('is defined', () => expect(promise.is.not).toBeDefined())
-      it('is an object', () => expect(promise.is.not).toEqual(jasmine.any(Object)))
+      it('be defined', () => expect(promise.is.not).toBeDefined())
+      it('be an object', () => expect(promise.is.not).toEqual(jasmine.any(Object)))
       /** @test {promise#is#not#a} */
       describe('a =>', () => {
-        it('is defined', () => expect(promise.is.not.a).toBeDefined())
-        it('is a function', () => expect(promise.is.not.a).toEqual(jasmine.any(Function)))
+        it('be defined', () => expect(promise.is.not.a).toBeDefined())
+        it('be a function', () => expect(promise.is.not.a).toEqual(jasmine.any(Function)))
       })
     })
   })
 
   /** @test {promise#should} */
   describe('should =>', () => {
-    it('is defined', () => expect(promise.should).toBeDefined())
-    it('is an object', () => expect(promise.should).toEqual(jasmine.any(Object)))
+    it('be defined', () => expect(promise.should).toBeDefined())
+    it('be an object', () => expect(promise.should).toEqual(jasmine.any(Object)))
 
     /** @test {promise#should#resolve} */
     describe('resolve =>', () => {
-      it('is defined', () => expect(promise.should.resolve).toBeDefined())
-      it('is a function', () => expect(promise.should.resolve).toEqual(jasmine.any(Function)))
+      it('be defined', () => expect(promise.should.resolve).toBeDefined())
+      describe('is a function', () => {
+        it('type', () => expect(promise.should.resolve).toEqual(jasmine.any(Function)))
+        describe('that =>', () => {
+          it('returns a function for resolving', () => expect(promise.should.resolve(createResolve())).toEqual(jasmine.any(Function)))
+          describe('that =>', () => {
+            it('returns undefined for resolving', () => expect(promise.should.resolve(createResolve())(() => {})).toBeUndefined())
+          })
+        })
+      })
     })
 
     /** @test {promise#should#reject} */
     describe('reject =>', () => {
-      it('is defined', () => expect(promise.should.reject).toBeDefined())
-      it('is a function', () => expect(promise.should.reject).toEqual(jasmine.any(Function)))
-    })
-
-    /** @test {promise#should#not} */
-    describe('not =>', () => {
-      it('is defined', () => expect(promise.should.not).toBeDefined())
-      it('is an object', () => expect(promise.should.not).toEqual(jasmine.any(Object)))
-      /** @test {promise#should#not#resolve} */
-      describe('resolve =>', () => {
-        it('is defined', () => expect(promise.should.not.resolve).toBeDefined())
-        it('is a function', () => expect(promise.should.not.resolve).toEqual(jasmine.any(Function)))
-      })
-
-      /** @test {promise#should#not#reject} */
-      describe('reject =>', () => {
-        it('is defined', () => expect(promise.should.not.reject).toBeDefined())
-        it('is a function', () => expect(promise.should.not.reject).toEqual(jasmine.any(Function)))
+      it('be defined', () => expect(promise.should.reject).toBeDefined())
+      describe('is a function', () => {
+        it('type', () => expect(promise.should.reject).toEqual(jasmine.any(Function)))
+        describe('that =>', () => {
+          it('returns a function for rejecting', () => expect(promise.should.reject(createReject())).toEqual(jasmine.any(Function)))
+          describe('that =>', () => {
+            it('returns undefined for rejecting', () => expect(promise.should.reject(createReject())(() => {})).toBeUndefined())
+          })
+        })
       })
     })
   })

@@ -45,6 +45,7 @@
     "upgrade": "ncu -a && npm update"
   },
   "dependencies": {
+    "bluebird": "^3.4.0",
     "chai": "^3.0.0"
   },
   "devDependencies": {
